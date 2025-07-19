@@ -1,0 +1,22 @@
+fileFormatVersion: 2
+guid: 9dbd284acb380b14ebb5b345ab3a38c9
+TrueTypeFontImporter:
+  externalObjects: {}
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontNames:
+  - Kind Daily
+  fallbackFontReferences:
+  - {fileID: 12800000, guid: 1431d7768fa1ff44292f7258b34bba9d, type: 3}
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  useLegacyBoundsCalculation: 0
+  shouldRoundAdvanceValue: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
