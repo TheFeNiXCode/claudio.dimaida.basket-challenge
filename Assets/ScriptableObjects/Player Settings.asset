@@ -1,0 +1,17 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9e6b3bbc9e25423438d0db6d7539a10b, type: 3}
+  m_Name: Player Settings
+  m_EditorClassIdentifier: 
+  typeOfBall: 0
+  listOfBall:
+  - {fileID: 2602298413642645406, guid: efba38fd56bdfae4da81dd40e97af4dd, type: 3}
