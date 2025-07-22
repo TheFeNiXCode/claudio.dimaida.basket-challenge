@@ -28,6 +28,8 @@ public class PlayerManager : MonoBehaviour
     private float precision = 1.0f;
 
     [SerializeField] public bool isThisShotABackspin = false;
+    
+    private bool inputEnabled = true;
 
     protected virtual void Awake()
     {
@@ -40,11 +42,14 @@ public class PlayerManager : MonoBehaviour
 
     private void Update()
     {
-        ableToShoot();
+        if (inputEnabled)
+        {
+            ableToShoot();
+        }
 
     }
 
-    void HandleSwipe(Vector2 start, Vector2 end, float duration, GameObject ballInstance)
+    void HandleSwipe(Vector2 start, Vector2 end, float duration)
     {
         if (duration > maxSwipeTime) return;
 
@@ -53,10 +58,10 @@ public class PlayerManager : MonoBehaviour
         if (swipe.magnitude < 50f)
         {
             // Swipe troppo corto, consideralo come click e applica una forza minima
-            swipeDirection = Vector2.up;
-            forceMultiplier = minSwipeForce;
-            precision = minPrecision; // opzionale: tiro impreciso nei semplici click
-            gameObject.GetComponent<BallShooter>().Shoot(ballInstance, forceMultiplier, precision, swipeStart, swipeEnd);
+            //swipeDirection = Vector2.up;
+            //forceMultiplier = minSwipeForce;
+            //precision = minPrecision; // opzionale: tiro impreciso nei semplici click
+            //gameObject.GetComponent<BallShooter>().Shoot(ballInstance, forceMultiplier, precision, swipeStart, swipeEnd);
             return;
         }
 
@@ -74,7 +79,7 @@ public class PlayerManager : MonoBehaviour
 
         curvatureFactor *= maxSpinCurveFactor;
 
-        gameObject.GetComponent<BallShooter>().Shoot(ballInstance, forceMultiplier, precision, swipeStart, swipeEnd, curvatureFactor);
+        gameObject.GetComponent<BallShooter>().Shoot(instanceBall(), forceMultiplier, precision, swipeStart, swipeEnd, curvatureFactor);
     }
 
     private GameObject instanceBall()
@@ -120,7 +125,7 @@ public class PlayerManager : MonoBehaviour
                     Debug.Log("Swipe ignorato: non è verso l'alto");
                     return;
                 }
-                HandleSwipe(swipeStart, swipeEnd, swipeDuration, instanceBall());
+                HandleSwipe(swipeStart, swipeEnd, swipeDuration);
             }
         }
         
@@ -143,7 +148,7 @@ public class PlayerManager : MonoBehaviour
                 return;
             }
 
-            HandleSwipe(swipeStart, swipeEnd, swipeDuration, instanceBall());
+            HandleSwipe(swipeStart, swipeEnd, swipeDuration);
 
         }
 #endif
@@ -153,5 +158,9 @@ public class PlayerManager : MonoBehaviour
     {
         isThisShotABackspin = isBack;
     }
+
+    public void DisableInput() { inputEnabled = false; }
+    public void EnableInput() { inputEnabled = true; }
+
 
 }
