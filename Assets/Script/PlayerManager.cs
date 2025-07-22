@@ -27,6 +27,8 @@ public class PlayerManager : MonoBehaviour
     private float forceMultiplier = 1.0f;
     private float precision = 1.0f;
 
+    [SerializeField] public bool isThisShotABackspin = false;
+
     protected virtual void Awake()
     {
         myTransform = transform;
@@ -74,7 +76,6 @@ public class PlayerManager : MonoBehaviour
 
         gameObject.GetComponent<BallShooter>().Shoot(ballInstance, forceMultiplier, precision, swipeStart, swipeEnd, curvatureFactor);
     }
-
 
     private GameObject instanceBall()
     {
@@ -146,6 +147,11 @@ public class PlayerManager : MonoBehaviour
 
         }
 #endif
+    }
+
+    public void isBackspin(bool isBack)
+    {
+        isThisShotABackspin = isBack;
     }
 
 }

@@ -136,9 +136,12 @@ public class BallShooter : MonoBehaviour
             backspin = Vector3.left * backspinAmount;
 
             Debug.Log("Backspin!");
-            // TODO: Implementare una sorta di possibilità extra nell'ottenere un punteggio più alto o comunque premiare il giocatore
-
+            transform.GetComponent<PlayerManager>().isBackspin(true);
             ball.AddTorque(backspin * curvatureFactor, ForceMode.Impulse);
+        }
+        else
+        {
+            transform.GetComponent<PlayerManager>().isBackspin(false);
         }
 
     }
