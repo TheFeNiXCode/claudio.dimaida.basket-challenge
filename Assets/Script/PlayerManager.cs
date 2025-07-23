@@ -8,6 +8,12 @@ public class PlayerManager : MonoBehaviour
     [SerializeField] PlayerSettings settings;
     [SerializeField] Cloth Net;
 
+    [Header("Camera Movement")]
+    [SerializeField] GameObject mainCamera;
+    [SerializeField] GameObject outTrigger;
+    [SerializeField] public bool cameraFollow = true;
+
+
     protected Transform myTransform { get; private set; }
 
     [Header("Input Swipe")]
@@ -27,8 +33,9 @@ public class PlayerManager : MonoBehaviour
     private float forceMultiplier = 1.0f;
     private float precision = 1.0f;
 
+    [Header("Controls")]
     [SerializeField] public bool isThisShotABackspin = false;
-    
+
     private bool inputEnabled = true;
 
     protected virtual void Awake()
@@ -95,7 +102,12 @@ public class PlayerManager : MonoBehaviour
             {
                 new ClothSphereColliderPair(ballCollider)
             };
+            if (cameraFollow) {
 
+                outTrigger.SetActive(true);
+                mainCamera.GetComponent<FollowBall>().FollowTheBall(ballInstance);
+
+            } 
             return ballInstance;
         }
         return null;

@@ -23,7 +23,7 @@ public class ScoreManager : MonoBehaviour
         score += defaultScoreToAdd;
         if (player.isThisShotABackspin) score += defaultBackspinScoreToAdd;
 
-        if(score > points.BestScore()) scoreText.color = new Color(205, 170, 0, 255);
+        if(score > points.BestScore()) scoreText.color = new Color(243, 155, 0, 255);
         scoreText.SetText(score.ToString());
 
         if (points.checkIfUpdateSpriteScore(score))

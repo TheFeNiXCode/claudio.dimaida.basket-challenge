@@ -46,8 +46,18 @@ public class SingleHoopTrigger : MonoBehaviour
                     onScored.Invoke(other.transform.root.GetComponent<PlayerManager>());
                 }
                 entryTimes.Remove(other.gameObject);
+
+                StartCoroutine(TimerToDisable(other.gameObject));
             }
 
         }  
     }
+
+    IEnumerator TimerToDisable(GameObject obj)
+    {
+        yield return new WaitForSeconds(0.4f);
+        obj.SetActive(false);
+        // Qui puoi mettere il codice da eseguire dopo 1 secondo
+    }
+
 }
