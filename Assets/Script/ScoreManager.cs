@@ -7,6 +7,7 @@ using UnityEngine.UI;
 public class ScoreManager : MonoBehaviour
 {
     [SerializeField] private PointsEvent points;
+    [SerializeField] private BackboardManager backboard;
     [SerializeField] private TMP_Text scoreText;
     [SerializeField] private Image spriteScore;
     [SerializeField] private int defaultScoreToAdd = 10;
@@ -22,6 +23,7 @@ public class ScoreManager : MonoBehaviour
         
         score += defaultScoreToAdd;
         if (player.isThisShotABackspin) score += defaultBackspinScoreToAdd;
+        score += backboard.AddBonusPoints();
 
         if(score > points.BestScore()) scoreText.color = new Color(243, 155, 0, 255);
         scoreText.SetText(score.ToString());

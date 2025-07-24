@@ -16,6 +16,9 @@ public class SingleHoopTrigger : MonoBehaviour
 
     private Dictionary<GameObject, float> entryTimes = new Dictionary<GameObject, float>();
 
+    [SerializeField] private BackboardManager backboard;
+
+
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Ball") && other.transform.root.CompareTag("Player")) {
@@ -56,8 +59,9 @@ public class SingleHoopTrigger : MonoBehaviour
     IEnumerator TimerToDisable(GameObject obj)
     {
         yield return new WaitForSeconds(0.4f);
+        // Codice da eseguire dopo 0.4s
         obj.SetActive(false);
-        // Qui puoi mettere il codice da eseguire dopo 1 secondo
+        backboard.hitBackboard = false;
     }
 
 }
