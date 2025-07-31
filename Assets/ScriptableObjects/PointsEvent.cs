@@ -8,6 +8,8 @@ public class PointsEvent : SavableObject
 
     [SerializeField] private int bestScore;
     [SerializeField] private int totalCoins;
+    [SerializeField] private int totalBackspin;
+    [SerializeField] private int totalBackboard;
     [SerializeField] private List<Sprite> spriteReward;
     [SerializeField] private int pointToSilverScore = 50;
     [SerializeField] private int pointToGoldenScore = 100;
@@ -19,6 +21,8 @@ public class PointsEvent : SavableObject
     {
         bestScore = 0;
         totalCoins = 0;
+        totalBackspin = 0;
+        totalBackboard = 0;
         indexSprite = 0;
     }
     public void UpdateCoins(int newCoins)
@@ -26,6 +30,18 @@ public class PointsEvent : SavableObject
         totalCoins += newCoins;
         SaveFile();
     }
+    public void UpdateBackspin(int newBackspin)
+    {
+        totalBackspin += newBackspin;
+        SaveFile();
+    }
+
+    public void UpdateBackboard(int newBackboard)
+    {
+        totalBackboard += newBackboard;
+        SaveFile();
+    }
+
     public void UpdatePoints(int lastScore, int newCoins) {
 
         bestScore = Mathf.Max(bestScore, lastScore);
@@ -66,5 +82,10 @@ public class PointsEvent : SavableObject
     public int BestScore()
     {
         return bestScore;
+    }
+
+    public int TotalCoins()
+    {
+        return totalCoins;
     }
 }

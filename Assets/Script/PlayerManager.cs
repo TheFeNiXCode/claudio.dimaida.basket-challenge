@@ -35,6 +35,7 @@ public class PlayerManager : MonoBehaviour
 
     [Header("Controls")]
     [SerializeField] public bool isThisShotABackspin = false;
+    [SerializeField] private bool isShotInProgress = false;
 
     private bool inputEnabled = true;
 
@@ -107,7 +108,10 @@ public class PlayerManager : MonoBehaviour
                 outTrigger.SetActive(true);
                 mainCamera.GetComponent<FollowBall>().FollowTheBall(ballInstance);
 
-            } 
+            }
+            
+            isShotInProgress = true;
+
             return ballInstance;
         }
         return null;
@@ -171,8 +175,19 @@ public class PlayerManager : MonoBehaviour
         isThisShotABackspin = isBack;
     }
 
+    public bool InShotInProgress()
+    {
+        return isShotInProgress;
+    }
+    public void OnShotEnded()
+    {
+        isShotInProgress = false;
+    }
+
+
     public void DisableInput() { inputEnabled = false; }
     public void EnableInput() { inputEnabled = true; }
 
+    
 
 }

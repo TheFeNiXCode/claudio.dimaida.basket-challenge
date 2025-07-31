@@ -15,6 +15,8 @@ public class BallOut : MonoBehaviour
             mainCamera.GetComponent<FollowBall>().ReturnToInitialPosition();
             other.gameObject.SetActive(false);
             backboard.hitBackboard = false;
+
+            other.transform.root.GetComponent<PlayerManager>().OnShotEnded();
         }
     }
 }

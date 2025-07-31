@@ -30,6 +30,9 @@ public class BallShooter : MonoBehaviour
 
     public void Shoot(GameObject ballInstance, float force, float prec, Vector2 swipeStart, Vector2 swipeEnd, float curvatureFactor = 0f)
     {
+
+        Debug.Log("Print");
+
         ball = ballInstance.GetComponent<Rigidbody>();
         forceMultiplier = force;
         precision = prec;

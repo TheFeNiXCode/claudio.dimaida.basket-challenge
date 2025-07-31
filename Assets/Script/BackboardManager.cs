@@ -17,9 +17,9 @@ public class BackboardManager : MonoBehaviour
     [SerializeField] private TextGlowAnimator glow;
 
     [SerializeField] PlayerSettings settings;
+    [SerializeField] ScoreManager scoreManager;
 
     [SerializeField] private List<WeightedValue> bonusBackboard = new List<WeightedValue>();
-
     [SerializeField] private int indexBonus = 3;
 
     private void Start()
@@ -92,9 +92,9 @@ public class BackboardManager : MonoBehaviour
     {
         if (hitBackboard && !glow.isAnimationActive)
         {
-            Debug.Log("Entro!");
-
             indexBonus = GetRandomProbabilityValue();
+            scoreManager.AddBackboardHit();
+
             Debug.Log("Bonus value: "+ indexBonus);
 
             if (indexBonus != 3)
@@ -108,6 +108,8 @@ public class BackboardManager : MonoBehaviour
     {
         if (glow.isAnimationActive)
         {
+            scoreManager.AddBackboardHit();
+
             if (indexBonus == 0) return 4;
             if (indexBonus == 1) return 6;
             if (indexBonus == 2) return 8;

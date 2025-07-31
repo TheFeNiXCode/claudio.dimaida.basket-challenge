@@ -62,6 +62,7 @@ public class SingleHoopTrigger : MonoBehaviour
         // Codice da eseguire dopo 0.4s
         obj.SetActive(false);
         backboard.hitBackboard = false;
+        obj.transform.root.GetComponent<PlayerManager>().OnShotEnded();
     }
 
 }

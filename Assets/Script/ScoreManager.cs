@@ -6,23 +6,45 @@ using UnityEngine.UI;
 
 public class ScoreManager : MonoBehaviour
 {
+
+    [Header("Points")]
     [SerializeField] private PointsEvent points;
     [SerializeField] private BackboardManager backboard;
     [SerializeField] private TMP_Text scoreText;
     [SerializeField] private Image spriteScore;
     [SerializeField] private int defaultScoreToAdd = 10;
     [SerializeField] private int defaultBackspinScoreToAdd = 10;
+    [SerializeField] private int defaultMultiplierBackspin = 5;
+    [SerializeField] private int defaultMutliplierBackboard = 10;
 
-    private int bestScore;
+
+
+    [Header("ResultsUI")]
+    [SerializeField] private TMP_Text rScoreText;
+    [SerializeField] private TMP_Text rBackboardText;
+    [SerializeField] private TMP_Text rBackspinText;
+    [SerializeField] private TMP_Text rCoinText;
+    [SerializeField] private StarsManager starsManager;
+
 
     public int score { get; private set; }
+    public int backboardHit { get; private set; }
+    public int backspinHit { get; private set; }
 
+    void Start()
+    {
+        setIntialValue();
+    }
 
     public void UpdateScore(PlayerManager player)
     {
         
         score += defaultScoreToAdd;
-        if (player.isThisShotABackspin) score += defaultBackspinScoreToAdd;
+        if (player.isThisShotABackspin) {
+
+            score += defaultBackspinScoreToAdd;
+            backspinHit += 1;
+        } 
         score += backboard.AddBonusPoints();
 
         if(score > points.BestScore()) scoreText.color = new Color(243, 155, 0, 255);
@@ -33,6 +55,59 @@ public class ScoreManager : MonoBehaviour
             spriteScore.sprite = points.UpdateGameScoreSprite(score);
             StartCoroutine(PopAnimation(spriteScore.rectTransform));
         }
+    }
+
+    public int getScore()
+    {
+        return score;
+    }
+
+    public int getBackboard()
+    {
+        return backboardHit;
+    }
+
+    public int getBackspin()
+    {
+        return backspinHit;
+    }
+
+    private void setIntialValue()
+    {
+        score = 0;
+        backboardHit = 0;
+        backspinHit = 0;
+    }
+
+    public void AddBackboardHit()
+    {
+        backboardHit += 1;
+    }
+
+    public void UpdateResultsTable()
+    {
+        rScoreText.SetText("+ " + score.ToString());
+        rBackboardText.SetText("+ " + backboardHit.ToString() + " x " + defaultMutliplierBackboard.ToString());
+        rBackspinText.SetText("+ " + backspinHit.ToString() + " x " + defaultMultiplierBackspin.ToString());
+
+        points.UpdateBackboard(backboardHit);
+        points.UpdateBackspin(backspinHit);
+
+        int coinValue = score + backboardHit * defaultMutliplierBackboard + backspinHit * defaultMultiplierBackspin;
+
+        rCoinText.SetText(coinValue.ToString());
+        points.UpdateCoins(coinValue);
+
+        starsManager.ShowStars(coinValue);
+
+    }
+
+    public void ResetResultsTable()
+    {
+        rScoreText.SetText("+ 0");
+        rBackboardText.SetText("+ 0" + " x 0");
+        rBackspinText.SetText("+ 0" + " x 0");
+        rCoinText.SetText("0");
     }
 
 

@@ -24,6 +24,7 @@ public class PositionManager : MonoBehaviour
     private bool isMoving = false;  // Evita più movimenti contemporanei
 
     private PlayerManager playerManager;
+    [SerializeField] private TimerManager timerManager;
 
     void Start()
     {
@@ -67,7 +68,8 @@ public class PositionManager : MonoBehaviour
     {
         isMoving = true;
 
-        playerManager.DisableInput();
+        if (playerManager != null)
+            playerManager.DisableInput();
 
         Vector3 startCamPos = mainCamera.position;
         Quaternion startCamRot = mainCamera.rotation;
@@ -98,7 +100,8 @@ public class PositionManager : MonoBehaviour
         currentIndex = newIndex;
         isMoving = false;
 
-        playerManager.EnableInput();
+        if (playerManager != null && timerManager.currentMatchTime > 0f)
+            playerManager.EnableInput();
     }
 
     private void TeleportPlayer(PositionPair pos)

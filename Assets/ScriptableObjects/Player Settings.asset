@@ -13,5 +13,7 @@ MonoBehaviour:
   m_Name: Player Settings
   m_EditorClassIdentifier: 
   typeOfBall: 0
+  durationBackboardText: 10
   listOfBall:
   - {fileID: 2602298413642645406, guid: efba38fd56bdfae4da81dd40e97af4dd, type: 3}
+  gameDifficult: 1

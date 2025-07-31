@@ -664,6 +664,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   points: {fileID: 11400000, guid: e817231fec64fec49bf4355d545ba29e, type: 2}
   bestScoreText: {fileID: 554288703}
+  coinsText: {fileID: 2129981234}
 --- !u!1 &439728523
 GameObject:
   m_ObjectHideFlags: 0

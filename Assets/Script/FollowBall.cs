@@ -10,8 +10,11 @@ public class FollowBall : MonoBehaviour
     [SerializeField, Range(0f, 1f)] private float followRotationWeight = 0.3f; // quanto la camera ruota verso la rotazione palla
     [SerializeField] private float returnDuration = 0.6f;
 
-    [Header("Player Manager")]
+    [Header("Manager")]
     [SerializeField] private PlayerManager playerManager;
+    [SerializeField] private TimerManager timerManager;
+
+
 
     private Vector3 initialPosition;
     private Quaternion initialRotation;
@@ -124,7 +127,7 @@ public class FollowBall : MonoBehaviour
         transform.position = initialPosition;
         transform.rotation = initialRotation;
 
-        if (playerManager != null)
+        if (playerManager != null && timerManager.currentMatchTime > 0f)
             playerManager.EnableInput();
 
         toggleAnimationMode();
