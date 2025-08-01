@@ -20,7 +20,7 @@ public class PositionManager : MonoBehaviour
     [Header("Positions List")]
     public List<PositionPair> positionPairs;
 
-    private int currentIndex = -1;  
+    private int currentIndex = 0;  
     private bool isMoving = false;  // Evita più movimenti contemporanei
 
     private PlayerManager playerManager;
@@ -51,6 +51,7 @@ public class PositionManager : MonoBehaviour
 
     public void OnScore()
     {
+        
         if (isMoving || positionPairs.Count <= 1)
             return;
 
@@ -114,6 +115,11 @@ public class PositionManager : MonoBehaviour
     {
         mainCamera.position = pos.cameraPosition.position;
         mainCamera.rotation = pos.cameraPosition.rotation;
+    }
+
+    public int GetIndex()
+    {
+        return currentIndex;
     }
 }
 

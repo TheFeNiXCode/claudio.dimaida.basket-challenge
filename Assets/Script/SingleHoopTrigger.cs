@@ -45,7 +45,6 @@ public class SingleHoopTrigger : MonoBehaviour
                 if (Time.time - entryTime <= maxPassTime)
                 {
                     // Gestione punteggio
-                    Debug.Log("Canestro!");
                     onScored.Invoke(other.transform.root.GetComponent<PlayerManager>());
                 }
                 entryTimes.Remove(other.gameObject);

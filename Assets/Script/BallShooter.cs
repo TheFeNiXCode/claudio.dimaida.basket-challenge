@@ -4,9 +4,19 @@ using UnityEngine;
 
 public class BallShooter : MonoBehaviour
 {
+    [System.Serializable]
+    public class PositionTargetPair
+    {
+        public Transform directTarget;
+        public Transform backboardTarget;
+    }
+
     [Header("Target")]
     public Transform directTarget;
     public Transform backboardTarget;
+    public List<PositionTargetPair> positionTargetPairs;
+    public PositionManager positionManager;
+
 
     [Range(0f, 1f)]
     public float useBackboardChance = 0.5f;
@@ -26,23 +36,41 @@ public class BallShooter : MonoBehaviour
 
     [Header("Effetto/Spin")]
     public float backspinAmount = 10f;      
-    public float curveSpinAmount = 3f;       
+    public float curveSpinAmount = 3f;
 
-    public void Shoot(GameObject ballInstance, float force, float prec, Vector2 swipeStart, Vector2 swipeEnd, float curvatureFactor = 0f)
+    private Vector3 chosenTarget;
+    private float chosenArcHeight;
+
+    public void Shoot(GameObject ballInstance, float force, float prec, Vector2 swipeStart, Vector2 swipeEnd, int target, float curvatureFactor = 0f)
     {
-
-        Debug.Log("Print");
-
         ball = ballInstance.GetComponent<Rigidbody>();
         forceMultiplier = force;
         precision = prec;
         ball.useGravity = true;
 
+        switch(target)
+        {
+            case 0:
+                chosenTarget = GetIdealTarget();
+                chosenArcHeight = arcHeight;
+                break;
+            case 1:
+                chosenTarget = positionTargetPairs[positionManager.GetIndex()].directTarget.position;
+                chosenArcHeight = positionTargetPairs[positionManager.GetIndex()].directTarget.GetComponent<TargetManager>().arcHeightToShoot;
+                break;
+            case 2:
+                chosenTarget = positionTargetPairs[positionManager.GetIndex()].backboardTarget.position;
+                chosenArcHeight = positionTargetPairs[positionManager.GetIndex()].backboardTarget.GetComponent<TargetManager>().arcHeightToShoot;
+                break;
+            default:
+                chosenTarget = GetIdealTarget();
+                chosenArcHeight = arcHeight;
+                break;
+        }
 
-        Vector3 chosenTarget = GetIdealTarget();
         Vector3 adjustedTarget = ApplyInaccuracy(chosenTarget, swipeStart, swipeEnd);
 
-        if (CalculateArcVelocity(transform.position, adjustedTarget, arcHeight, out Vector3 velocity))
+        if (CalculateArcVelocity(transform.position, adjustedTarget, chosenArcHeight, out Vector3 velocity))
         {
             velocity *= forceMultiplier;
             ball.velocity = velocity;
@@ -138,7 +166,6 @@ public class BallShooter : MonoBehaviour
             // Applica rotazione sull’asse X negativa (rotazione in senso orario nel piano YZ)
             backspin = Vector3.left * backspinAmount;
 
-            Debug.Log("Backspin!");
             transform.GetComponent<PlayerManager>().isBackspin(true);
             ball.AddTorque(backspin * curvatureFactor, ForceMode.Impulse);
         }
@@ -171,7 +198,7 @@ public class BallShooter : MonoBehaviour
 
             Vector3 directionYZ = new Vector3(0f, toTarget.y, toTarget.z).normalized;
             backspin = -directionYZ * backspinAmount;
-            sidespin = Vector3.up * lateralRatio * curveSpinAmount;
+            sidespin = curveSpinAmount * lateralRatio * Vector3.up;
 
             // TODO: Implementare una sorta di possibilità extra nell'ottenere un punteggio più alto o comunque premiare il giocatore
 

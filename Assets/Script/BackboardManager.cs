@@ -95,8 +95,6 @@ public class BackboardManager : MonoBehaviour
             indexBonus = GetRandomProbabilityValue();
             scoreManager.AddBackboardHit();
 
-            Debug.Log("Bonus value: "+ indexBonus);
-
             if (indexBonus != 3)
             {
                 StartCanvasAnimation(indexBonus);

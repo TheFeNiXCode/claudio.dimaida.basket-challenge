@@ -12,11 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d23ff2425fbe46c4ba5117c8fd63f64a, type: 3}
   m_Name: Points Event
   m_EditorClassIdentifier: 
-  bestScore: 200
-  totalCoins: 0
+  bestScore: 100
+  totalCoins: 1475
+  totalBackspin: 53
+  totalBackboard: 66
   spriteReward:
   - {fileID: -374776885, guid: a5e645d0b2507ac42807ef8e886f7d45, type: 3}
   - {fileID: -1298529376, guid: a5e645d0b2507ac42807ef8e886f7d45, type: 3}
   - {fileID: -1737005464, guid: a5e645d0b2507ac42807ef8e886f7d45, type: 3}
-  pointToSilverScore: 50
-  pointToGoldenScore: 100
+  pointToSilverScore: 40
+  pointToGoldenScore: 80
