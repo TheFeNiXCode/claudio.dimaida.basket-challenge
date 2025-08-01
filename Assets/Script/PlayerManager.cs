@@ -60,6 +60,10 @@ public class PlayerManager : MonoBehaviour
     private Coroutine resetCoroutine;
     private GameObject currentBall = null;
 
+    [Header("CPU Battle")]
+    [SerializeField] private GameObject CPU;
+    [SerializeField] private GameObject CPUTextScore;
+
 
     protected virtual void Awake()
     {
@@ -67,6 +71,12 @@ public class PlayerManager : MonoBehaviour
     }
     void Start()
     {
+        if (CPU && settings.IsVSCPU())
+        {
+            CPU.SetActive(true);
+            CPUTextScore.SetActive(true);
+        }
+
         if (swipeTrail)
         {
             swipeTrail.SetActive(false);

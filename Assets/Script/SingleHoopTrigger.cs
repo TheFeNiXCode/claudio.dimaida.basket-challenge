@@ -6,6 +6,7 @@ using UnityEngine.Events;
 
 
 [Serializable] public class ScoreEvent : UnityEvent<PlayerManager> { }
+[Serializable] public class ScoreEventCPU : UnityEvent<CPUBattleManager> { }
 
 public class SingleHoopTrigger : MonoBehaviour
 {
@@ -13,8 +14,10 @@ public class SingleHoopTrigger : MonoBehaviour
     [SerializeField] private float maxUpwardVelocity = -0.1f; // Deve scendere almeno un po'
 
     [SerializeField] private ScoreEvent onScored;
+    [SerializeField] private ScoreEventCPU onScoredCPU;
 
     private Dictionary<GameObject, float> entryTimes = new Dictionary<GameObject, float>();
+    private Dictionary<GameObject, float> entryTimesCPU = new Dictionary<GameObject, float>();
 
     [SerializeField] private BackboardManager backboard;
 
@@ -32,8 +35,19 @@ public class SingleHoopTrigger : MonoBehaviour
                     entryTimes[other.gameObject] = Time.time;
                 }
             }
-        }
+        }else if (other.CompareTag("Ball") && other.transform.root.CompareTag("CPU"))
+        {
 
+            Rigidbody rbCPU = other.attachedRigidbody;
+            if (rbCPU != null && rbCPU.velocity.y < maxUpwardVelocity)
+            {
+                // Solo se la palla scende
+                if (!entryTimes.ContainsKey(other.gameObject))
+                {
+                    entryTimesCPU[other.gameObject] = Time.time;
+                }
+            }
+        }
     }
 
     private void OnTriggerExit(Collider other)
@@ -52,7 +66,19 @@ public class SingleHoopTrigger : MonoBehaviour
                 StartCoroutine(TimerToDisable(other.gameObject));
             }
 
-        }  
+        }
+        else if (other.CompareTag("Ball") && other.transform.root.CompareTag("CPU"))
+        {
+
+            if (entryTimesCPU.TryGetValue(other.gameObject, out float entryTimeCPU))
+            {
+                if (Time.time - entryTimeCPU <= maxPassTime)
+                {
+                    // Gestione punteggio
+                    onScoredCPU.Invoke(other.transform.root.GetComponent<CPUBattleManager>());
+                }
+            }
+        }
     }
 
     IEnumerator TimerToDisable(GameObject obj)

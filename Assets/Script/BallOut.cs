@@ -18,5 +18,11 @@ public class BallOut : MonoBehaviour
 
             other.transform.root.GetComponent<PlayerManager>().OnShotEnded();
         }
+        else if (other.CompareTag("Ball") && other.transform.root.CompareTag("CPU"))
+        {
+            other.gameObject.SetActive(false);
+
+            other.transform.root.GetComponent<CPUBattleManager>().setIsShoot(false);
+        }
     }
 }

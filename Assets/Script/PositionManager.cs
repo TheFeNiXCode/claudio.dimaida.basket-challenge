@@ -16,15 +16,19 @@ public class PositionManager : MonoBehaviour
     public Transform mainCamera;             
     public float cameraMoveDuration = 1.5f;
     public AnimationCurve cameraMoveCurve = AnimationCurve.EaseInOut(0, 0, 1, 1); // curva per l'interpolazione
+    [SerializeField] PlayerSettings settings;
 
     [Header("Positions List")]
     public List<PositionPair> positionPairs;
-
     private int currentIndex = 0;  
     private bool isMoving = false;  // Evita più movimenti contemporanei
+    private int cpuPositionIndex = -1; // Memorizza la posizione attuale della CPU
+
 
     private PlayerManager playerManager;
     [SerializeField] private TimerManager timerManager;
+
+
 
     void Start()
     {
@@ -49,6 +53,19 @@ public class PositionManager : MonoBehaviour
         TeleportCamera(positionPairs[currentIndex]);
     }
 
+    public int PositionsCount()
+    {
+        return positionPairs.Count;
+    }
+
+    public void SetCPUPosition(GameObject CPU, int index)
+    {
+        cpuPositionIndex = index;
+
+        TeleportCPU(CPU, positionPairs[cpuPositionIndex]);
+    }
+
+
     public void OnScore()
     {
         
@@ -57,10 +74,21 @@ public class PositionManager : MonoBehaviour
 
         // Sceglie una nuova posizione a caso, diversa da quella attuale
         int newIndex;
-        do
+
+        if(cpuPositionIndex == -1)
         {
-            newIndex = Random.Range(0, positionPairs.Count);
-        } while (newIndex == currentIndex);
+            do
+            {
+                newIndex = Random.Range(0, positionPairs.Count);
+            } while (newIndex == currentIndex);
+        }
+        else
+        {
+            do
+            {
+                newIndex = Random.Range(0, positionPairs.Count);
+            } while (newIndex == currentIndex && newIndex == cpuPositionIndex);
+        }
 
         StartCoroutine(MoveCameraToPosition(newIndex));
     }
@@ -117,9 +145,20 @@ public class PositionManager : MonoBehaviour
         mainCamera.rotation = pos.cameraPosition.rotation;
     }
 
+    public void TeleportCPU(GameObject CPU, PositionPair pos)
+    {
+        CPU.transform.position = pos.playerPosition.position;
+        CPU.transform.rotation = pos.playerPosition.rotation;
+    }
+
     public int GetIndex()
     {
         return currentIndex;
+    }
+
+    public int GetIndexCPU()
+    {
+        return cpuPositionIndex;
     }
 }
 

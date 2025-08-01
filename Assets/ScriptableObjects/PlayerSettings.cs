@@ -8,6 +8,7 @@ public class PlayerSettings : SavableObject
 
     [SerializeField] private int typeOfBall = 0;
     [SerializeField] private float durationBackboardText = 10f;
+    [SerializeField] private bool battleVSCPU = false;
 
     [SerializeField] private List<GameObject> listOfBall;
 
@@ -17,9 +18,21 @@ public class PlayerSettings : SavableObject
 
     public override void ResetFile()
     {
+        battleVSCPU = false;
         typeOfBall = 0;
         durationBackboardText = 10f;
         gameDifficult = 1;
+    }
+
+    public bool IsVSCPU()
+    {
+        return battleVSCPU;
+    }
+
+    public void battleVSCPUSelected(bool battle)
+    {
+        battleVSCPU = battle;
+        SaveFile();
     }
 
     public void newBallSelected(int indexBall)

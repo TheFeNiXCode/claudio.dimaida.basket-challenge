@@ -16,13 +16,29 @@ public class ScoreManager : MonoBehaviour
     [SerializeField] private int defaultBackspinScoreToAdd = 10;
     [SerializeField] private int defaultMultiplierBackspin = 5;
     [SerializeField] private int defaultMutliplierBackboard = 10;
+    [SerializeField] private int defaultMutliplierScore = 2;
+    [SerializeField] PlayerSettings settings;
+
 
     [Header("ResultsUI")]
+    [SerializeField] private GameObject resultsPanel;
     [SerializeField] private TMP_Text rScoreText;
     [SerializeField] private TMP_Text rBackboardText;
     [SerializeField] private TMP_Text rBackspinText;
     [SerializeField] private TMP_Text rCoinText;
     [SerializeField] private StarsManager starsManager;
+
+    [Header("ResultsUI_CPU")]
+    [SerializeField] private GameObject resultsPanelCPU;
+    [SerializeField] private TMP_Text rScoreTextCPU;
+    [SerializeField] private TMP_Text rBackboardTextCPU;
+    [SerializeField] private TMP_Text rBackspinTextCPU;
+    [SerializeField] private TMP_Text rCoinTextCPU;
+    [SerializeField] private TMP_Text rWinLoseTextCPU;
+    [SerializeField] private Color winColor = Color.green;
+    [SerializeField] private Color loseColor = Color.red;
+    [SerializeField] private CPUBattleManager cPUBattleManager;
+
 
     [Header("Score Flyers")]
     [SerializeField] private TMP_Text flyerText;
@@ -48,6 +64,9 @@ public class ScoreManager : MonoBehaviour
 
     void Start()
     {
+        if (resultsPanel != null) resultsPanel.SetActive(false);
+        if (resultsPanelCPU != null) resultsPanelCPU.SetActive(false);
+
         setIntialValue();
         InitialFlyerPosition();
     }
@@ -181,6 +200,21 @@ public class ScoreManager : MonoBehaviour
         backboardHit += 1;
     }
 
+    public void UpdateResult()
+    {
+        if (settings.IsVSCPU())
+        {
+            if (resultsPanelCPU != null)
+                resultsPanelCPU.SetActive(true);
+            UpdateResultsTableCPU();
+        }
+        else {
+            if (resultsPanel != null)
+                resultsPanel.SetActive(true);
+            UpdateResultsTable();
+        } 
+    }
+
     public void UpdateResultsTable()
     {
         rScoreText.SetText("+ " + score.ToString());
@@ -198,6 +232,63 @@ public class ScoreManager : MonoBehaviour
         starsManager.ShowStars(coinValue);
 
     }
+
+    public void UpdateResultsTableCPU()
+    {
+        points.UpdateBackboard(backboardHit);
+        points.UpdateBackspin(backspinHit);
+
+        int coinValue = score + backboardHit * defaultMutliplierBackboard + backspinHit * defaultMultiplierBackspin;
+
+        if (score < cPUBattleManager.GetScoreCPU())
+        {
+            rWinLoseTextCPU.SetText("YOU LOSE");
+            rWinLoseTextCPU.color = loseColor;
+            points.UpdateLose();
+            rScoreTextCPU.SetText("+ " + score.ToString());
+            coinValue = score + backboardHit * defaultMutliplierBackboard + backspinHit * defaultMultiplierBackspin;
+        }
+        else if(score > cPUBattleManager.GetScoreCPU())
+        {
+            rWinLoseTextCPU.SetText("YOU WIN");
+            rWinLoseTextCPU.color = winColor;
+            points.UpdateWin();
+
+            switch (settings.getGameDifficult())
+            {
+                case 0:
+                    defaultMutliplierScore = 2;
+                    break;
+                case 1:
+                    defaultMutliplierScore = 3;
+                    break;
+                case 2:
+                    defaultMutliplierScore = 5;
+                    break;
+                default:
+                    defaultMutliplierScore = 2;
+                    break;
+            }
+
+            rScoreTextCPU.SetText("+ " + score.ToString() + " x " + defaultMutliplierScore.ToString());
+            coinValue = score * defaultMutliplierScore + backboardHit * defaultMutliplierBackboard + backspinHit * defaultMultiplierBackspin;
+        }
+        else
+        {
+            rWinLoseTextCPU.SetText("DRAW");
+            points.UpdateDraw();
+            rScoreTextCPU.SetText("+ " + score.ToString());
+            coinValue = score + backboardHit * defaultMutliplierBackboard + backspinHit * defaultMultiplierBackspin;
+        }
+
+        rBackboardTextCPU.SetText("+ " + backboardHit.ToString() + " x " + defaultMutliplierBackboard.ToString());
+        rBackspinTextCPU.SetText("+ " + backspinHit.ToString() + " x " + defaultMultiplierBackspin.ToString());
+        rCoinTextCPU.SetText(coinValue.ToString());
+        points.UpdateCoins(coinValue);
+
+        starsManager.ShowStarsCPU(coinValue);
+    }
+
 
     public void ResetResultsTable()
     {

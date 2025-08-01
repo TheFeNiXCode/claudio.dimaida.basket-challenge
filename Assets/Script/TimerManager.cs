@@ -22,9 +22,6 @@ public class TimerManager : MonoBehaviour
     [SerializeField] private float matchDuration = 120f; // default 2 min
     [SerializeField] private bool autoStart = true;
 
-    [Header("UI Risultati")]
-    [SerializeField] private GameObject resultsPanel;
-
     [Header("Player")]
     [SerializeField] private PlayerManager playerManager;
 
@@ -40,7 +37,7 @@ public class TimerManager : MonoBehaviour
 
     private void Start()
     {
-        if (resultsPanel != null) resultsPanel.SetActive(false);
+  
         if (countdownText != null) countdownText.gameObject.SetActive(false);
         if (countdownCanvasGroup != null) countdownCanvasGroup.alpha = 0f;
 
@@ -144,9 +141,6 @@ public class TimerManager : MonoBehaviour
             playerManager.DisableInput();
             
         }
-        
-        if (resultsPanel != null)
-            resultsPanel.SetActive(true);
 
         OnGameEnd?.Invoke();
     }

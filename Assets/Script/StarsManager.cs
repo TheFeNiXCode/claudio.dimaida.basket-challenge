@@ -7,6 +7,7 @@ public class StarsManager : MonoBehaviour
 {
     [Header("Stars Settings")]
     [SerializeField] private Image[] stars;
+    [SerializeField] private Image[] starsCPU;
     [SerializeField] private float initialDelay = 0.2f;
 
     [SerializeField] private float delayBetweenStars = 0.5f;
@@ -33,6 +34,18 @@ public class StarsManager : MonoBehaviour
         }
 
         StartCoroutine(AnimateStars(coinValue));
+    }
+
+    public void ShowStarsCPU(int coinValue)
+    {
+        // Disattiva tutte le stelle e resetta la scala
+        foreach (var star in starsCPU)
+        {
+            star.gameObject.SetActive(false);
+            star.rectTransform.localScale = Vector3.zero;
+        }
+
+        StartCoroutine(AnimateStarsCPU(coinValue));
     }
 
     private IEnumerator AnimateStars(int coinValue)
@@ -64,6 +77,39 @@ public class StarsManager : MonoBehaviour
             }*/
 
             yield return StartCoroutine(PopIn(stars[i].rectTransform));
+            yield return new WaitForSeconds(delayBetweenStars);
+        }
+    }
+
+    private IEnumerator AnimateStarsCPU(int coinValue)
+    {
+        int starsToShow = 0;
+
+        // Calcola quante stelle mostrare
+        for (int i = 0; i < thresholds.Length; i++)
+        {
+            if (coinValue >= thresholds[i])
+                starsToShow++;
+        }
+
+        if (starsToShow == 0)
+            yield break;
+
+        if (initialDelay > 0f)
+            yield return new WaitForSeconds(initialDelay);
+
+        // Mostra e anima le stelle
+        for (int i = 0; i < starsToShow; i++)
+        {
+            starsCPU[i].gameObject.SetActive(true);
+
+            /* Play sound
+            if (audioSource != null && starSound != null)
+            {
+                audioSource.PlayOneShot(starSound);
+            }*/
+
+            yield return StartCoroutine(PopIn(starsCPU[i].rectTransform));
             yield return new WaitForSeconds(delayBetweenStars);
         }
     }
