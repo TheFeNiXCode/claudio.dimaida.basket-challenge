@@ -25,10 +25,8 @@ public class PositionManager : MonoBehaviour
     private int cpuPositionIndex = -1; // Memorizza la posizione attuale della CPU
 
 
-    private PlayerManager playerManager;
+    [SerializeField] private PlayerManager playerManager;
     [SerializeField] private TimerManager timerManager;
-
-
 
     void Start()
     {
@@ -36,14 +34,6 @@ public class PositionManager : MonoBehaviour
         if (positionPairs == null || positionPairs.Count == 0)
         {
             Debug.LogError("Nessuna posizione assegnata!");
-            return;
-        }
-
-        // Recupera lo script PlayerManager dal player
-        playerManager = player.GetComponent<PlayerManager>();
-        if (playerManager == null)
-        {
-            Debug.LogError("PlayerManager non trovato sul player!");
             return;
         }
 
@@ -107,7 +97,6 @@ public class PositionManager : MonoBehaviour
 
         float elapsed = 0f;
 
-        TeleportPlayer(positionPairs[newIndex]);
 
         // Anima la camera lungo la curva di interpolazione
         while (elapsed < cameraMoveDuration)
@@ -123,11 +112,16 @@ public class PositionManager : MonoBehaviour
             yield return null;
         }
 
+        if (playerManager.currentBall)
+            playerManager.currentBall.SetActive(false);
+
         // Imposta esattamente la posizione finale (evita errori di interpolazione)
         mainCamera.position = endCamPos;
         mainCamera.rotation = endCamRot;
         currentIndex = newIndex;
         isMoving = false;
+
+        TeleportPlayer(positionPairs[newIndex]);
 
         if (playerManager != null && timerManager.currentMatchTime > 0f)
             playerManager.EnableInput();

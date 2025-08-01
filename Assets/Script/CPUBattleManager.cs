@@ -118,10 +118,22 @@ public class CPUBattleManager : MonoBehaviour
                 currentBall = Instantiate(ball, myTransform);
 
                 SphereCollider ballCollider = currentBall.GetComponent<SphereCollider>();
-                Net.sphereColliders = new ClothSphereColliderPair[]
+
+                if (Net.sphereColliders == null || Net.sphereColliders.Length == 0)
                 {
-                    new ClothSphereColliderPair(ballCollider)
-                };
+                    Net.sphereColliders = new ClothSphereColliderPair[]
+                    {
+                new ClothSphereColliderPair(ballCollider)
+                    };
+                }
+                else
+                {
+                    var oldArray = Net.sphereColliders;
+                    var newArray = new ClothSphereColliderPair[oldArray.Length + 1];
+                    oldArray.CopyTo(newArray, 0);
+                    newArray[newArray.Length - 1] = new ClothSphereColliderPair(ballCollider);
+                    Net.sphereColliders = newArray;
+                }
             }
         }
         else

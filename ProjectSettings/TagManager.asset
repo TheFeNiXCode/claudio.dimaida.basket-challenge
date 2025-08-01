@@ -8,6 +8,7 @@ TagManager:
   - CPU
   - Back
   - Ring
+  - Fire
   layers:
   - Default
   - TransparentFX

@@ -20,7 +20,7 @@ public class SingleHoopTrigger : MonoBehaviour
     private Dictionary<GameObject, float> entryTimesCPU = new Dictionary<GameObject, float>();
 
     [SerializeField] private BackboardManager backboard;
-
+    [SerializeField] private PlayerManager playerManager;
 
     private void OnTriggerEnter(Collider other)
     {
@@ -62,8 +62,7 @@ public class SingleHoopTrigger : MonoBehaviour
                     onScored.Invoke(other.transform.root.GetComponent<PlayerManager>());
                 }
                 entryTimes.Remove(other.gameObject);
-
-                StartCoroutine(TimerToDisable(other.gameObject));
+                StartCoroutine(TimerToDisable());
             }
 
         }
@@ -81,13 +80,12 @@ public class SingleHoopTrigger : MonoBehaviour
         }
     }
 
-    IEnumerator TimerToDisable(GameObject obj)
+    IEnumerator TimerToDisable()
     {
         yield return new WaitForSeconds(0.4f);
-        // Codice da eseguire dopo 0.4s
-        obj.SetActive(false);
+        //obj.SetActive(false);
         backboard.hitBackboard = false;
-        obj.transform.root.GetComponent<PlayerManager>().OnShotEnded();
+        playerManager.OnShotEnded();
     }
 
 }

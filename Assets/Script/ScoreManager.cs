@@ -18,6 +18,7 @@ public class ScoreManager : MonoBehaviour
     [SerializeField] private int defaultMutliplierBackboard = 10;
     [SerializeField] private int defaultMutliplierScore = 2;
     [SerializeField] PlayerSettings settings;
+    [SerializeField] private FireballManager fireballManager;
 
 
     [Header("ResultsUI")]
@@ -83,11 +84,13 @@ public class ScoreManager : MonoBehaviour
 
     public void UpdateScore(PlayerManager player)
     {
-        shotScore += defaultScoreToAdd;
-        
+        if (fireballManager.isFireballActive) shotScore = shotScore + defaultScoreToAdd * 2;
+        else shotScore += defaultScoreToAdd;
+
         if (player.isThisShotABackspin) {
 
-            shotScore += defaultBackspinScoreToAdd;
+            if (fireballManager.isFireballActive) shotScore = shotScore + defaultBackspinScoreToAdd * 2;
+            else shotScore += defaultBackspinScoreToAdd;
             backspinHit += 1;
         }
         shotScore += backboard.AddBonusPoints();

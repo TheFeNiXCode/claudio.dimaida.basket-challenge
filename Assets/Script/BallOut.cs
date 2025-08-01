@@ -16,6 +16,7 @@ public class BallOut : MonoBehaviour
             other.gameObject.SetActive(false);
             backboard.hitBackboard = false;
 
+            other.transform.root.GetComponent<FireballManager>().OnMissedShot();
             other.transform.root.GetComponent<PlayerManager>().OnShotEnded();
         }
         else if (other.CompareTag("Ball") && other.transform.root.CompareTag("CPU"))

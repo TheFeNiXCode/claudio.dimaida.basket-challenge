@@ -58,7 +58,8 @@ public class PlayerManager : MonoBehaviour
     [SerializeField] private float sliderResetSpeed = 200f; // px/sec
     private float currentPower = 0f;
     private Coroutine resetCoroutine;
-    private GameObject currentBall = null;
+    public GameObject currentBall = null;
+    public Transform fireEffect = null;
 
     [Header("CPU Battle")]
     [SerializeField] private GameObject CPU;
@@ -164,11 +165,25 @@ public class PlayerManager : MonoBehaviour
             {
                 currentBall = Instantiate(ball, myTransform);
 
+                fireEffect = currentBall.transform.GetChild(0);
+
                 SphereCollider ballCollider = currentBall.GetComponent<SphereCollider>();
-                Net.sphereColliders = new ClothSphereColliderPair[]
+
+                if (Net.sphereColliders == null || Net.sphereColliders.Length == 0)
                 {
-                    new ClothSphereColliderPair(ballCollider)
-                };
+                    Net.sphereColliders = new ClothSphereColliderPair[]
+                    {
+                new ClothSphereColliderPair(ballCollider)
+                    };
+                }
+                else
+                {
+                    var oldArray = Net.sphereColliders;
+                    var newArray = new ClothSphereColliderPair[oldArray.Length + 1];
+                    oldArray.CopyTo(newArray, 0);
+                    newArray[newArray.Length - 1] = new ClothSphereColliderPair(ballCollider);
+                    Net.sphereColliders = newArray;
+                }
             }
         }
         else
@@ -222,7 +237,6 @@ public class PlayerManager : MonoBehaviour
                 //float swipeDuration = Time.time - swipeStartTime;
                 
                 EndSwipeTrail();
-                ResetPowerSlider();
 
                 Vector2 swipe = swipeEnd - swipeStart;
                 if (swipe.y < 0 || swipe.y < Mathf.Abs(swipe.x))
@@ -230,7 +244,8 @@ public class PlayerManager : MonoBehaviour
                     Debug.Log("Swipe ignorato: non è verso l'alto");
                     return;
                 }
-                HandleSwipe(swipeStart, swipeEnd, swipeDuration);
+                HandleSwipe(swipeStart, swipeEnd);
+                ResetPowerSlider();
             }
         }
         
@@ -344,11 +359,14 @@ public class PlayerManager : MonoBehaviour
         }
     }
 
+
     public void isBackspin(bool isBack)
     {
         isThisShotABackspin = isBack;
     }
 
+    public void fireEnabled() => fireEffect.gameObject.SetActive(true);
+    public void fireDisabled() => fireEffect.gameObject.SetActive(false);
     public void hideSwipe() => swipeTrail.SetActive(false);
     public void visibleSwipe() => swipeTrail.SetActive(true);
     public bool InShotInProgress() => isShotInProgress;
