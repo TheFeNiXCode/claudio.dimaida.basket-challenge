@@ -7,6 +7,8 @@ using UnityEngine.UI;
 public class PlayerManager : MonoBehaviour
 {
     [SerializeField] PlayerSettings settings;
+    [SerializeField] PointsEvent pointsEvent;
+
     [SerializeField] Cloth Net;
 
     [Header("Camera Movement")]
@@ -54,8 +56,9 @@ public class PlayerManager : MonoBehaviour
 
     [Header("Slider Shoot")]
     [SerializeField] private Slider powerSlider;
-    [SerializeField] private float maxSwipeDistance = 800f;
     [SerializeField] private float sliderResetSpeed = 200f; // px/sec
+    private float maxSwipeDistance;
+
     private float currentPower = 0f;
     private Coroutine resetCoroutine;
     public GameObject currentBall = null;
@@ -72,6 +75,9 @@ public class PlayerManager : MonoBehaviour
     }
     void Start()
     {
+
+        maxSwipeDistance = settings.getRealSenivity();
+
         if (CPU && settings.IsVSCPU())
         {
             CPU.SetActive(true);
@@ -121,6 +127,8 @@ public class PlayerManager : MonoBehaviour
             minPrecisionShoot = 1f;
             maxPrecisionShoot = 1f;
             target = 1;
+
+            pointsEvent.UpdatePerfectShot();
         }
         else if (areaShoot.BackboardShoot(powerSlider.value))
         {
@@ -152,7 +160,7 @@ public class PlayerManager : MonoBehaviour
         float curvatureFactor = Mathf.Clamp01(lateralDeviation / (verticalMovement + 0.01f));
 
         curvatureFactor *= maxSpinCurveFactor;
-
+        pointsEvent.UpdateShot();
         gameObject.GetComponent<BallShooter>().Shoot(instanceBall(), forceMultiplier, precision, swipeStart, swipeEnd, target, curvatureFactor);
     }
 

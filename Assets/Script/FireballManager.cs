@@ -59,6 +59,8 @@ public class FireballManager : MonoBehaviour
     {
         if (isFireballActive) return;
 
+        AudioManager.Instance.PlayMusicSFXBack(6, true, 1f);
+
         isFireballActive = true;
         FireballModeEnabled?.Invoke();
         fireballCoroutine = StartCoroutine(FireballCountdown());
@@ -66,6 +68,7 @@ public class FireballManager : MonoBehaviour
 
     private void DeactivateFireball()
     {
+        AudioManager.Instance.StopMusicSFXBack();
         currentValue = 0f;
         fireballSlider.value = currentValue;
         isFireballActive = false;

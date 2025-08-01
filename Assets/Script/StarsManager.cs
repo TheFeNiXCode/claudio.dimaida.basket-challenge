@@ -18,12 +18,6 @@ public class StarsManager : MonoBehaviour
     [Header("Coin Thresholds")]
     [SerializeField] private int[] thresholds = { 10, 20, 30 };
 
-    /*
-    [Header("Audio")]
-    [SerializeField] private AudioSource audioSource;
-    [SerializeField] private AudioClip starSound;
-    */
-
     public void ShowStars(int coinValue)
     {
         // Disattiva tutte le stelle e resetta la scala
@@ -70,11 +64,7 @@ public class StarsManager : MonoBehaviour
         {
             stars[i].gameObject.SetActive(true);
 
-            /* Play sound
-            if (audioSource != null && starSound != null)
-            {
-                audioSource.PlayOneShot(starSound);
-            }*/
+            AudioManager.Instance.PlaySFX(4, 1f);
 
             yield return StartCoroutine(PopIn(stars[i].rectTransform));
             yield return new WaitForSeconds(delayBetweenStars);

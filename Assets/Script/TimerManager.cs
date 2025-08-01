@@ -13,9 +13,6 @@ public class TimerManager : MonoBehaviour
     [SerializeField] private Vector3 countdownEndScale = Vector3.one;
     [SerializeField] private float scaleAnimationSpeed = 0.2f;
     [SerializeField] private CanvasGroup countdownCanvasGroup;
-    //[SerializeField] private AudioClip beepSound;  //DA IMPLEMENTARE
-    //[SerializeField] private AudioClip goSound; //DA IMPLEMENTARE
-    //[SerializeField] private AudioSource audioSource; //DA IMPLEMENTARE
 
     [Header("Timer partita")]
     [SerializeField] private TextMeshProUGUI gameTimerText;
@@ -37,7 +34,9 @@ public class TimerManager : MonoBehaviour
 
     private void Start()
     {
-  
+
+        AudioManager.Instance.PlayMusic(1, true, 1f);
+
         if (countdownText != null) countdownText.gameObject.SetActive(false);
         if (countdownCanvasGroup != null) countdownCanvasGroup.alpha = 0f;
 
@@ -65,21 +64,22 @@ public class TimerManager : MonoBehaviour
 
         while (countdown > 0)
         {
+            AudioManager.Instance.PlaySFX(7, 1f);
+
             countdownText.text = Mathf.Ceil(countdown).ToString();
 
             // Effetto scala con coroutine
             yield return StartCoroutine(AnimateScale(countdownText.transform, countdownStartScale, countdownEndScale, scaleAnimationSpeed));
 
-            //PlaySound(beepSound);
-
             yield return new WaitForSeconds(1f);
             countdown -= 1f;
         }
 
+        AudioManager.Instance.PlaySFX(2, 1f);
+
         // Mostra "GO!"
         countdownText.text = "GO!";
         yield return StartCoroutine(AnimateScale(countdownText.transform, countdownStartScale, countdownEndScale, scaleAnimationSpeed));
-        //PlaySound(goSound);
 
         yield return new WaitForSeconds(0.5f);
         yield return StartCoroutine(FadeOut(countdownCanvasGroup, 0.5f));
@@ -105,6 +105,10 @@ public class TimerManager : MonoBehaviour
             if (currentMatchTime <= 0f)
             {
                 currentMatchTime = 0f;
+                AudioManager.Instance.PlaySFX(3, 0.5f);
+                AudioManager.Instance.StopMusic();
+                AudioManager.Instance.StopMusicSFXBack();
+
                 StartCoroutine(WaitForShotAndEndGame());
             }
 
@@ -158,12 +162,6 @@ public class TimerManager : MonoBehaviour
         isPaused = false;
         OnGameResumed?.Invoke();
     }
-
-    /*private void PlaySound(AudioClip clip)
-    {
-        if (audioSource != null && clip != null)
-            audioSource.PlayOneShot(clip);
-    }*/
 
     private IEnumerator AnimateScale(Transform target, Vector3 from, Vector3 to, float duration)
     {

@@ -26,6 +26,8 @@ public class SingleHoopTrigger : MonoBehaviour
     {
         if (other.CompareTag("Ball") && other.transform.root.CompareTag("Player")) {
 
+            AudioManager.Instance.PlaySFX(5, 0.6f);
+
             Rigidbody rb = other.attachedRigidbody;
             if (rb != null && rb.velocity.y < maxUpwardVelocity)
             {
@@ -37,6 +39,7 @@ public class SingleHoopTrigger : MonoBehaviour
             }
         }else if (other.CompareTag("Ball") && other.transform.root.CompareTag("CPU"))
         {
+            AudioManager.Instance.PlaySFX(5, 1f);
 
             Rigidbody rbCPU = other.attachedRigidbody;
             if (rbCPU != null && rbCPU.velocity.y < maxUpwardVelocity)
